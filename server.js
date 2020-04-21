@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const urlMappings = require('./serverside/controller/urlShortenerController');
 
 const mongoEndpoint = process.env.MONGODB_URI || 'mongodb://127.0.0.1/url_shortener_app';
 mongoose.connect(mongoEndpoint, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -10,10 +11,12 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Error connecting to MongoDB:'));
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+app.use('/url', urlMappings);
 
 // Static file declaration
 app.use(express.static(path.join(__dirname, 'client_url_shortener/build')));
@@ -25,6 +28,7 @@ if (process.env.NODE_ENV === 'production') {
         res.sendfile(path.join(__dirname = 'client_url_shortener/build/index.html'));
     })
 }
+
 
 // Build mode
 app.get('*', (req, res) => {
