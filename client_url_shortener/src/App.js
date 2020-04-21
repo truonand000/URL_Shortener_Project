@@ -7,6 +7,7 @@ class App extends React.Component {
         super(props);
 
         this.state = {
+            prefix: "https://andrew-truong-webdev-assign4.herokuapp.com/url/",
             isCustomUrl: false,
             isDelete: false,
             formBasicInput: "",
@@ -101,7 +102,7 @@ class App extends React.Component {
         }).then((response) => {
             this.setState({
                 responseMessage: response.data,
-                formBasicOutput: "http://localhost:8080/url/" + randomString
+                formBasicOutput: this.state.prefix + randomString
             })
         }).catch((err) => {
             this.setState({
@@ -121,7 +122,7 @@ class App extends React.Component {
             }).then((response) => {
                 this.setState({
                     responseMessage: response.data,
-                    formBasicOutput: "http://localhost:8080/url/" + this.state.formCustomUrlBrand
+                    formBasicOutput: this.state.prefix + this.state.formCustomUrlBrand
                 })
             }).catch(err => {
                 this.setState({
@@ -133,7 +134,7 @@ class App extends React.Component {
 
     deleteShortenedUrl() {
         if (this.state.formBasicEditInput !== "") {
-            let prefixSize = "http://localhost:8080/url/".length;
+            let prefixSize = this.state.prefix.length;
             let extension = this.state.formBasicEditInput.substring(prefixSize);
             console.log(extension);
             Axios.delete('/url/' + extension)
@@ -152,7 +153,7 @@ class App extends React.Component {
 
     editShortenedUrl() {
         if (this.state.formBasicEditInput !== "" && this.validateUrl(this.state.formBasicEditNewUrl)) {
-            let prefixSize = "http://localhost:8080/url/".length;
+            let prefixSize = this.state.prefix.length;
             let extension = this.state.formBasicEditInput.substring(prefixSize);
             console.log(extension);
             Axios.put('/url/' + extension, {
